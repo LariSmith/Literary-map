@@ -1,82 +1,259 @@
 /* style.css */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap');
+
 body {
     margin: 0;
     padding: 0;
-    background-image: url('https://www.transparenttextures.com/patterns/cork-board.png'); /* Padrão de quadro de cortiça */
-    background-color: #d1b48c; /* Cor de fundo caso a textura falhe, estilo papel kraft */
-    font-family: 'Courier New', Courier, monospace; /* Fonte tipo máquina de escrever */
+    background-color: #2b1f1a; /* Fundo escuro atrás do quadro */
+    font-family: 'Cinzel', serif; /* Fonte mais clássica para os títulos */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    overflow: hidden;
+}
+
+.atlas-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 95vw;
+    max-width: 1200px;
+    height: 90vh;
+}
+
+/* Placa do Título */
+.header-plate {
+    position: absolute;
+    top: -30px; /* Sobe um pouco mais para sobressair da nova moldura */
+    z-index: 10;
+    background: linear-gradient(180deg, #4d331f 0%, #2e1c10 100%); /* Madeira mais escura e realista */
+    border: 4px solid #1a0f08;
+    border-radius: 5px; /* Transformando em uma placa retangular robusta com leve arredondamento */
+    padding: 10px 50px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    /* Sombra projetada no quadro + chanfro interno metálico/dourado */
+    box-shadow:
+        0 15px 25px rgba(0,0,0,0.9),
+        inset 0 0 0 2px #8b6b45, /* Borda interna dourada estilo engaste */
+        inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+/* Pseudo-elementos simulando rebites/parafusos metálicos nos cantos da placa */
+.header-plate::before,
+.header-plate::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle, #7a6142 0%, #3a2e1f 100%);
+    border-radius: 50%;
+    box-shadow: inset 1px 1px 2px rgba(255,255,255,0.4), 1px 1px 3px rgba(0,0,0,0.9);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.header-plate::before {
+    left: 15px;
+}
+
+.header-plate::after {
+    right: 15px;
+}
+
+.header-plate h1 {
+    color: #f4dca6; /* Tom dourado/bronze pálido mais brilhante */
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: 4px;
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    /* Efeito de baixo-relevo / gravação metálica na madeira */
+    text-shadow:
+        -1px -1px 1px rgba(0,0,0,0.8),
+        1px 1px 2px rgba(255,255,255,0.2);
+}
+
+/* Ícones CSS (Substitutos de imagens por enquanto) */
+.header-icon {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+}
+
+.compass-icon {
+    /* Exemplo com CSS radial puro para bússola */
+    background: radial-gradient(circle, #e6c88f 20%, transparent 25%),
+                linear-gradient(45deg, transparent 48%, #e6c88f 49%, #e6c88f 51%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, #e6c88f 49%, #e6c88f 51%, transparent 52%);
+    border: 2px solid #e6c88f;
+    border-radius: 50%;
+}
+
+.feather-icon {
+    /* Forma simples imitando pena com bordas arredondadas assimétricas */
+    background: #e6c88f;
+    border-radius: 0 100% 0 100%;
+    transform: rotate(-45deg);
 }
 
 #board {
-    width: 90vw;
-    height: 85vh;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.3);
+    width: 100%;
+    height: 100%;
+    margin-top: 20px; /* Espaço para a placa vazar a borda superior */
+    /* Moldura estilo madeira profunda, texturizada e mais realista */
+    background: linear-gradient(135deg, #4a2f1d 0%, #2b1a10 100%);
+    border: 12px solid #1a0f08; /* Linha externa mais escura, moldura mais espessa */
     border-radius: 5px;
-    border: 15px solid #5a3a22; /* Borda imitando madeira escura */
+    padding: 25px; /* A espessura da madeira da moldura */
+    box-shadow:
+        inset 0 0 30px rgba(0,0,0,0.95), /* Sombreamento interno profundo */
+        inset 0 0 10px rgba(0,0,0,0.8),
+        0 20px 50px rgba(0,0,0,0.8); /* Sombra externa projetada */
     position: relative;
-    background: #e9e5c4; /* Cor de papel antigo pro fundo do mapa */
-    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Borda interna simulando rebaixo/chanfro do quadro metálico/madeira */
+#board::before {
+    content: '';
+    position: absolute;
+    top: 20px; left: 20px; right: 20px; bottom: 20px;
+    border: 2px solid #5c3e26; /* Highlight/reflexo sutil na borda interna */
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 2px;
 }
 
 #map {
     width: 100%;
     height: 100%;
+    border: 1px solid #000;
+    box-shadow: inset 0 0 50px rgba(100, 60, 30, 0.5); /* Sombra invadindo o mapa */
 }
 
-/* Aplica o filtro vintage APENAS aos tiles do mapa, para não afetar marcadores e popups */
-.leaflet-tile-pane {
-    filter: sepia(0.6) contrast(1.2) opacity(0.85);
+/* O Selo / Símbolo no canto do mapa (Dark Metallic Bronze matching reference) */
+.seal {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%; /* Perfect circle for metallic seal */
+    /* Dark bronze/metal gradient */
+    background: radial-gradient(circle at 30% 30%, #5a4b3c 0%, #3e3226 40%, #2b2218 80%, #15100b 100%);
+    border: 4px solid #1a1510;
+    z-index: 1000;
+    /* Deep shadow on the map and inner metallic bevels */
+    box-shadow:
+        4px 4px 10px rgba(0, 0, 0, 0.8),
+        inset 3px 3px 6px rgba(255, 255, 255, 0.15),
+        inset -3px -3px 8px rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Customização dos Pins (Pushpins) */
+/* Inner decorative ring of the metallic seal */
+.seal::before {
+    content: '';
+    position: absolute;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    box-sizing: border-box;
+}
+
+.seal::after {
+    content: 'Z'; /* Assuming 'Z' or any logo inside */
+    color: #1a1510; /* Very dark text simulating engraved metal */
+    font-family: 'Times New Roman', serif;
+    font-size: 3rem;
+    font-weight: bold;
+    /* Engraved/Stamped metal effect (inset text shadow) */
+    text-shadow:
+        1px 1px 1px rgba(255, 255, 255, 0.1),
+        -1px -1px 2px rgba(0, 0, 0, 0.9);
+    z-index: 2;
+}
+
+/* MapLibre Canvas Vintage Filter (Sand/Parchment tone) */
+/* Targets the webgl canvas to apply the sepia/sand tone uniformly over Positron tiles */
+.maplibregl-canvas {
+    filter: sepia(0.6) hue-rotate(5deg) saturate(1.8) contrast(1.2) brightness(0.9);
+}
+
+/* Customização dos Pins (Alfinetes 3D com sombra) */
 .detective-pin {
-    width: 20px;
-    height: 30px;
-    background-image: radial-gradient(circle at 5px 5px, #ff4d4d, #cc0000);
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    width: 24px;
+    height: 24px;
+    /* Cabeça do alfinete mais arredondada simulando brilho 3D e plástico */
+    background: radial-gradient(circle at 8px 6px, #ff6b6b 0%, #d31a1a 40%, #7a0000 100%);
+    border-radius: 50%;
+    box-shadow:
+        inset -2px -2px 5px rgba(0,0,0,0.6), /* Sombra interna para arredondar */
+        3px 4px 5px rgba(0,0,0,0.5); /* Sombra projetada */
     position: relative;
-    /* Faz parecer um alfinete de bolinha vermelha */
+    transform: rotate(15deg); /* Dá um pequeno ângulo ao alfinete */
 }
 
-/* Opcional: A agulha do alfinete */
+/* Base ou Agulha do alfinete mais detalhada e realista */
 .detective-pin::after {
     content: '';
     position: absolute;
-    bottom: -15px;
-    left: 9px;
-    width: 2px;
-    height: 15px;
-    background-color: silver;
-    box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    bottom: -18px;
+    left: 10px;
+    width: 3px;
+    height: 20px;
+    /* Gradiente simulando metal */
+    background: linear-gradient(90deg, #999 0%, #eee 50%, #666 100%);
+    border-radius: 2px;
+    /* A sombra da agulha reflete o fato de estar espetada */
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.6);
+    z-index: -1;
 }
 
-/* Customização do Popup (Parecer um pedaço de papel velho ou polaroid) */
-/* Precisamos de !important para garantir que sobrescrevemos o leaflet.css e o sepia filter não acabe escurecendo tudo */
-.leaflet-popup-content-wrapper {
-    background: #fdf5e6 !important; /* Papel velho */
+/* Brilho extra na cabeça do alfinete */
+.detective-pin::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* MapLibre Popup Customization */
+.maplibregl-popup-content {
+    background: #fdf5e6 !important; /* Old paper */
     border-radius: 2px !important;
     box-shadow: 3px 3px 10px rgba(0,0,0,0.4) !important;
     border: 1px solid #ccc;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     color: #000 !important;
+    padding: 15px !important;
 }
 
-.leaflet-popup-content-wrapper * {
+.maplibregl-popup-content * {
     color: #000 !important;
 }
 
-.leaflet-popup-tip {
-    background: #fdf5e6 !important;
+.maplibregl-popup-tip {
+    border-top-color: #fdf5e6 !important;
+    border-bottom-color: #fdf5e6 !important;
 }
 
-/* Um clips ou fita no topo do popup para dar o charme */
-.leaflet-popup-content-wrapper::before {
+/* Tape on top of popup */
+.maplibregl-popup-content::before {
     content: '';
     position: absolute;
     top: -10px;
@@ -84,7 +261,40 @@ body {
     transform: translateX(-50%) rotate(-5deg);
     width: 40px;
     height: 15px;
-    background-color: rgba(255, 255, 255, 0.5); /* Fita adesiva fosca */
+    background-color: rgba(255, 255, 255, 0.5);
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     z-index: -1;
+}
+
+/* MapLibre Custom Navigation Controls (Vintage Style) */
+.custom-nav-ctrl {
+    background: transparent !important;
+    box-shadow: none !important;
+    margin: 15px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.custom-nav-ctrl button {
+    background-color: #e6c88f !important; /* Parchment color */
+    color: #4a2e1b !important; /* Dark brown text */
+    border: 1px solid #8b5a2b !important;
+    border-radius: 4px !important;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5) !important;
+    font-weight: bold;
+    font-family: serif;
+    width: 30px !important;
+    height: 30px !important;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    padding: 0;
+    line-height: 1;
+}
+
+.custom-nav-ctrl button:hover {
+    background-color: #d1b47c !important; /* Darker on hover */
 }
