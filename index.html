@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa Literário - Quadro de Detetive</title>
 
-    <!-- MapLibre GL CSS -->
-    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
-
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -23,13 +20,19 @@
         <!-- O quadro em si -->
         <div id="board">
             <div id="map"></div>
+            <!-- Tooltip HTML (hidden by default) -->
+            <div id="tooltip">
+                <div id="tooltip-title">Title</div>
+                <div id="tooltip-location">Location</div>
+            </div>
             <!-- Selo inferior direito -->
             <div class="seal"></div>
         </div>
     </div>
 
-    <!-- MapLibre GL JS -->
-    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    <!-- Three.js Library and Controls via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
     <!-- Custom JS -->
     <script src="script.js"></script>

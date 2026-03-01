@@ -182,119 +182,53 @@ body {
     z-index: 2;
 }
 
-/* MapLibre Canvas Vintage Filter (Sand/Parchment tone) */
-/* Targets the webgl canvas to apply the sepia/sand tone uniformly over Positron tiles */
-.maplibregl-canvas {
-    filter: sepia(0.6) hue-rotate(5deg) saturate(1.8) contrast(1.2) brightness(0.9);
-}
-
-/* Customização dos Pins (Alfinetes 3D com sombra) */
-.detective-pin {
-    width: 24px;
-    height: 24px;
-    /* Cabeça do alfinete mais arredondada simulando brilho 3D e plástico */
-    background: radial-gradient(circle at 8px 6px, #ff6b6b 0%, #d31a1a 40%, #7a0000 100%);
-    border-radius: 50%;
-    box-shadow:
-        inset -2px -2px 5px rgba(0,0,0,0.6), /* Sombra interna para arredondar */
-        3px 4px 5px rgba(0,0,0,0.5); /* Sombra projetada */
-    position: relative;
-    transform: rotate(15deg); /* Dá um pequeno ângulo ao alfinete */
-}
-
-/* Base ou Agulha do alfinete mais detalhada e realista */
-.detective-pin::after {
-    content: '';
-    position: absolute;
-    bottom: -18px;
-    left: 10px;
-    width: 3px;
-    height: 20px;
-    /* Gradiente simulando metal */
-    background: linear-gradient(90deg, #999 0%, #eee 50%, #666 100%);
+/* Three.js Canvas Styles */
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
     border-radius: 2px;
-    /* A sombra da agulha reflete o fato de estar espetada */
-    box-shadow: 2px 2px 2px rgba(0,0,0,0.6);
-    z-index: -1;
 }
 
-/* Brilho extra na cabeça do alfinete */
-.detective-pin::before {
-    content: '';
+/* Custom Tooltip for 3D Pins */
+#tooltip {
     position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 8px;
-    height: 8px;
-    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-/* MapLibre Popup Customization */
-.maplibregl-popup-content {
-    background: #fdf5e6 !important; /* Old paper */
-    border-radius: 2px !important;
-    box-shadow: 3px 3px 10px rgba(0,0,0,0.4) !important;
-    border: 1px solid #ccc;
+    background: #fdf5e6; /* Old paper */
+    border: 1px solid #c7b299;
+    border-radius: 2px;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.6);
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
-    color: #000 !important;
-    padding: 15px !important;
+    color: #2b1f1a;
+    padding: 10px 15px;
+    pointer-events: none;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    transform: translate(-50%, -120%);
 }
 
-.maplibregl-popup-content * {
-    color: #000 !important;
-}
-
-.maplibregl-popup-tip {
-    border-top-color: #fdf5e6 !important;
-    border-bottom-color: #fdf5e6 !important;
-}
-
-/* Tape on top of popup */
-.maplibregl-popup-content::before {
+#tooltip::before {
     content: '';
     position: absolute;
     top: -10px;
     left: 50%;
-    transform: translateX(-50%) rotate(-5deg);
-    width: 40px;
-    height: 15px;
-    background-color: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transform: translateX(-50%) rotate(-3deg);
+    width: 35px;
+    height: 12px;
+    background-color: rgba(240, 235, 220, 0.7);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     z-index: -1;
 }
 
-/* MapLibre Custom Navigation Controls (Vintage Style) */
-.custom-nav-ctrl {
-    background: transparent !important;
-    box-shadow: none !important;
-    margin: 15px !important;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+#tooltip-title {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    border-bottom: 1px dashed #c7b299;
+    padding-bottom: 3px;
 }
 
-.custom-nav-ctrl button {
-    background-color: #e6c88f !important; /* Parchment color */
-    color: #4a2e1b !important; /* Dark brown text */
-    border: 1px solid #8b5a2b !important;
-    border-radius: 4px !important;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.5) !important;
-    font-weight: bold;
-    font-family: serif;
-    width: 30px !important;
-    height: 30px !important;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    padding: 0;
-    line-height: 1;
-}
-
-.custom-nav-ctrl button:hover {
-    background-color: #d1b47c !important; /* Darker on hover */
+#tooltip-location {
+    font-size: 0.9rem;
+    color: #5c3e26;
 }
