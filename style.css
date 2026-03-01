@@ -109,11 +109,17 @@ body {
     right: 30px;
     width: 60px;
     height: 60px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #2a2a2a 40%, #111 100%);
-    border: 4px solid #555;
+    /* Organic, slightly irregular shape for melted wax */
+    border-radius: 52% 48% 51% 49% / 51% 49% 52% 48%;
+    /* Deep, rich red gradients for wax */
+    background: radial-gradient(circle at 30% 30%, #a82020 0%, #7a0f0f 40%, #4a0505 80%, #2a0000 100%);
+    border: 3px solid #6b0c0c;
     z-index: 1000;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    /* Soft shadow on the map */
+    box-shadow:
+        4px 4px 10px rgba(0, 0, 0, 0.7),
+        inset 2px 2px 5px rgba(255, 255, 255, 0.2),
+        inset -4px -4px 8px rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -121,9 +127,14 @@ body {
 
 .seal::after {
     content: 'Z';
-    color: #888;
-    font-family: serif;
-    font-size: 2rem;
+    color: #3a0404;
+    font-family: 'Times New Roman', serif;
+    font-size: 2.2rem;
+    font-weight: bold;
+    /* Stamped-in effect (inset text) */
+    text-shadow:
+        1px 1px 1px rgba(255, 255, 255, 0.2),
+        -1px -1px 2px rgba(0, 0, 0, 0.8);
     font-weight: bold;
 }
 
