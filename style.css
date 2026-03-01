@@ -1,58 +1,184 @@
 /* style.css */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap');
+
 body {
     margin: 0;
     padding: 0;
-    background-image: url('https://www.transparenttextures.com/patterns/cork-board.png'); /* Padrão de quadro de cortiça */
-    background-color: #d1b48c; /* Cor de fundo caso a textura falhe, estilo papel kraft */
-    font-family: 'Courier New', Courier, monospace; /* Fonte tipo máquina de escrever */
+    background-color: #2b1f1a; /* Fundo escuro atrás do quadro */
+    font-family: 'Cinzel', serif; /* Fonte mais clássica para os títulos */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    overflow: hidden;
+}
+
+.atlas-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 95vw;
+    max-width: 1200px;
+    height: 90vh;
+}
+
+/* Placa do Título */
+.header-plate {
+    position: absolute;
+    top: -20px;
+    z-index: 10;
+    background: linear-gradient(180deg, #5a3a22 0%, #3e2717 100%);
+    border: 3px solid #8b5a2b;
+    border-radius: 40px;
+    padding: 5px 40px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.8), inset 0 2px 5px rgba(255,255,255,0.2);
+}
+
+.header-plate h1 {
+    color: #e6c88f; /* Tom dourado pálido */
+    margin: 0;
+    font-size: 1.8rem;
+    letter-spacing: 3px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+/* Ícones CSS (Substitutos de imagens por enquanto) */
+.header-icon {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+}
+
+.compass-icon {
+    /* Exemplo com CSS radial puro para bússola */
+    background: radial-gradient(circle, #e6c88f 20%, transparent 25%),
+                linear-gradient(45deg, transparent 48%, #e6c88f 49%, #e6c88f 51%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, #e6c88f 49%, #e6c88f 51%, transparent 52%);
+    border: 2px solid #e6c88f;
+    border-radius: 50%;
+}
+
+.feather-icon {
+    /* Forma simples imitando pena com bordas arredondadas assimétricas */
+    background: #e6c88f;
+    border-radius: 0 100% 0 100%;
+    transform: rotate(-45deg);
 }
 
 #board {
-    width: 90vw;
-    height: 85vh;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.3);
-    border-radius: 5px;
-    border: 15px solid #5a3a22; /* Borda imitando madeira escura */
+    width: 100%;
+    height: 100%;
+    margin-top: 20px; /* Espaço para a placa vazar a borda superior */
+    /* Moldura estilo madeira profunda (usando bordas e box-shadow) */
+    background: #3e2717; /* Fundo da base da moldura */
+    border: 8px solid #2b1f1a; /* Linha externa mais escura */
+    border-radius: 3px;
+    padding: 20px; /* A espessura da madeira */
+    box-shadow:
+        inset 0 0 20px rgba(0,0,0,0.9),
+        0 15px 40px rgba(0,0,0,0.7);
     position: relative;
-    background: #e9e5c4; /* Cor de papel antigo pro fundo do mapa */
-    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Borda interna clara simulando rebaixo do quadro */
+#board::before {
+    content: '';
+    position: absolute;
+    top: 15px; left: 15px; right: 15px; bottom: 15px;
+    border: 3px solid #1a120b;
+    z-index: 1;
+    pointer-events: none;
 }
 
 #map {
     width: 100%;
     height: 100%;
+    border: 1px solid #000;
+    box-shadow: inset 0 0 50px rgba(100, 60, 30, 0.5); /* Sombra invadindo o mapa */
 }
 
-/* Aplica o filtro vintage APENAS aos tiles do mapa, para não afetar marcadores e popups */
+/* O Selo / Símbolo no canto do mapa */
+.seal {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #2a2a2a 40%, #111 100%);
+    border: 4px solid #555;
+    z-index: 1000;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.seal::after {
+    content: 'Z';
+    color: #888;
+    font-family: serif;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Aplica o filtro vintage fortemente ao mapa (tonalidade amarelada de pergaminho) */
 .leaflet-tile-pane {
-    filter: sepia(0.6) contrast(1.2) opacity(0.85);
+    filter: sepia(0.8) hue-rotate(-10deg) saturate(1.5) contrast(1.1) brightness(0.95);
 }
 
-/* Customização dos Pins (Pushpins) */
+/* Sombra no fio de lã */
+/* O SVG gerado pelo Leaflet para o polyline precisa ter o filtro drop-shadow para dar a sensação 3D de lã */
+.red-string-svg {
+    filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.7));
+}
+
+/* Customização dos Pins (Alfinetes 3D com sombra) */
 .detective-pin {
-    width: 20px;
-    height: 30px;
-    background-image: radial-gradient(circle at 5px 5px, #ff4d4d, #cc0000);
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    width: 24px;
+    height: 24px;
+    /* Cabeça do alfinete mais arredondada simulando brilho 3D e plástico */
+    background: radial-gradient(circle at 8px 6px, #ff6b6b 0%, #d31a1a 40%, #7a0000 100%);
+    border-radius: 50%;
+    box-shadow:
+        inset -2px -2px 5px rgba(0,0,0,0.6), /* Sombra interna para arredondar */
+        3px 4px 5px rgba(0,0,0,0.5); /* Sombra projetada */
     position: relative;
-    /* Faz parecer um alfinete de bolinha vermelha */
+    transform: rotate(15deg); /* Dá um pequeno ângulo ao alfinete */
 }
 
-/* Opcional: A agulha do alfinete */
+/* Base ou Agulha do alfinete mais detalhada e realista */
 .detective-pin::after {
     content: '';
     position: absolute;
-    bottom: -15px;
-    left: 9px;
-    width: 2px;
-    height: 15px;
-    background-color: silver;
-    box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    bottom: -18px;
+    left: 10px;
+    width: 3px;
+    height: 20px;
+    /* Gradiente simulando metal */
+    background: linear-gradient(90deg, #999 0%, #eee 50%, #666 100%);
+    border-radius: 2px;
+    /* A sombra da agulha reflete o fato de estar espetada */
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.6);
+    z-index: -1;
+}
+
+/* Brilho extra na cabeça do alfinete */
+.detective-pin::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
 }
 
 /* Customização do Popup (Parecer um pedaço de papel velho ou polaroid) */
@@ -87,4 +213,39 @@ body {
     background-color: rgba(255, 255, 255, 0.5); /* Fita adesiva fosca */
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     z-index: -1;
+}
+
+/* Customização dos botões de zoom para ficarem com visual antigo */
+.leaflet-control-zoom a {
+    background-color: #e6c88f !important; /* Cor de pergaminho/bege claro */
+    color: #4a2e1b !important; /* Marrom escuro */
+    border: 1px solid #8b5a2b !important;
+    border-radius: 4px !important;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5) !important;
+    font-weight: bold;
+    font-family: serif;
+}
+
+.leaflet-control-zoom a:hover {
+    background-color: #d1b47c !important; /* Um pouco mais escuro ao passar o mouse */
+}
+
+/* Botão de zoom-in (o superior) com uma margem extra se quiser, mas bordas ajustadas */
+.leaflet-control-zoom-in {
+    border-bottom: 1px solid #8b5a2b !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+/* Botão de zoom-out (o inferior) */
+.leaflet-control-zoom-out {
+    border-top: none !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+/* Container do controle de zoom para remover bordas indesejadas do leaflet base */
+.leaflet-bar {
+    border: none !important;
+    box-shadow: none !important;
 }

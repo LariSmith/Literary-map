@@ -40,13 +40,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Adicionar a "Cordinha Vermelha" ligando os pontos na ordem de leitura
-            // Usamos Polyline e estilizamos com vermelho, traçado (dashArray) e sombra para parecer uma corda
+            // Removido o traçado para parecer um fio liso de lã (conforme imagem de referência)
+            // A classe 'red-string-svg' é adicionada para que o CSS crie a sombra 3D por fora do stroke
             const redString = L.polyline(coordinatesArray, {
-                color: '#cc0000',
-                weight: 4,
-                opacity: 0.8,
-                dashArray: '5, 10', // Faz parecer um fio enrolado ou costura
-                lineJoin: 'round'
+                color: '#900000', /* Vermelho mais escuro e fechado como lã */
+                weight: 5, /* Fio um pouco mais grosso */
+                opacity: 0.9,
+                className: 'red-string-svg', /* Classe customizada que trataremos no CSS */
+                lineJoin: 'round',
+                lineCap: 'round'
             }).addTo(map);
 
             // Ajusta o zoom do mapa para mostrar todos os pontos
