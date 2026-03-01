@@ -1,60 +1,195 @@
 // script.js
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializa o mapa focado na Europa (ou num panorama geral onde as histórias acontecem)
-    // Zoom inicial 4 para mostrar vários países de uma vez
-    const map = L.map('map').setView([48.8566, 2.3522], 4);
+    // Initial camera settings
+    const initialCenter = [12.0, 48.0]; // Longitude, Latitude for Europe
+    const initialZoom = 4.2;
+    const initialPitch = 45;
+    const initialBearing = 0;
 
-    // Carrega um tile layer com aparência neutra ou antiga
-    // O estilo CartoDB Voyager fica interessante com filtros CSS vintage
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 19
-    }).addTo(map);
-    // Custom Icon (Alfinete)
-    const detectiveIcon = L.divIcon({
-        className: 'detective-pin',
-        iconSize: [20, 30],
-        iconAnchor: [10, 30],
-        popupAnchor: [0, -35]
+    // Initialize MapLibre GL JS map
+    const map = new maplibregl.Map({
+        container: 'map',
+        style: {
+            'version': 8,
+            'sources': {
+                'raster-tiles': {
+                    'type': 'raster',
+                    // Using CartoDB Positron (No Labels) as a clean base, labels can be added or we can use the regular one.
+                    // The CSS filter on the canvas will give it the parchment look.
+                    'tiles': [
+                        'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+                        'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+                        'https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+                        'https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png'
+                    ],
+                    'tileSize': 256,
+                    'attribution': '&copy; OpenStreetMap contributors &copy; CARTO'
+                }
+            },
+            'layers': [
+                {
+                    'id': 'simple-tiles',
+                    'type': 'raster',
+                    'source': 'raster-tiles',
+                    'minzoom': 0,
+                    'maxzoom': 22
+                }
+            ]
+        },
+        center: initialCenter,
+        zoom: initialZoom,
+        pitch: initialPitch,
+        bearing: initialBearing,
+        attributionControl: false // We will handle attribution differently if needed or hide it for aesthetics
     });
 
-    // Função para buscar dados do JSON e desenhar no mapa
-    fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
-            // Ordenar por ordem de leitura
-            data.sort((a, b) => a.readOrder - b.readOrder);
+    // Custom Navigation Control (Zoom in, Zoom out, Reset)
+    class CustomNavigationControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group custom-nav-ctrl';
 
-            const coordinatesArray = [];
+            // Zoom In Button
+            const zoomIn = document.createElement('button');
+            zoomIn.className = 'maplibregl-ctrl-icon custom-ctrl-zoomin';
+            zoomIn.type = 'button';
+            zoomIn.innerHTML = '+';
+            zoomIn.onclick = () => this._map.zoomIn();
+            this._container.appendChild(zoomIn);
 
-            data.forEach((book, index) => {
-                // Adiciona a coordenada ao array para desenhar a linha (cordinha vermelha)
-                coordinatesArray.push(book.coordinates);
+            // Zoom Out Button
+            const zoomOut = document.createElement('button');
+            zoomOut.className = 'maplibregl-ctrl-icon custom-ctrl-zoomout';
+            zoomOut.type = 'button';
+            zoomOut.innerHTML = '-';
+            zoomOut.onclick = () => this._map.zoomOut();
+            this._container.appendChild(zoomOut);
 
-                // Cria o marcador
-                const marker = L.marker(book.coordinates, { icon: detectiveIcon }).addTo(map);
+            // Reset (X) Button
+            const resetBtn = document.createElement('button');
+            resetBtn.className = 'maplibregl-ctrl-icon custom-ctrl-reset';
+            resetBtn.type = 'button';
+            resetBtn.innerHTML = '×'; // Multiplication sign for X
+            resetBtn.onclick = () => {
+                this._map.flyTo({
+                    center: initialCenter,
+                    zoom: initialZoom,
+                    pitch: initialPitch,
+                    bearing: initialBearing,
+                    duration: 1500
+                });
+            };
+            this._container.appendChild(resetBtn);
 
-                // Popups estilo anotações com o nome do livro e localização
-                marker.bindPopup(`<b>${book.title}</b><br><small>${book.location}</small>`);
-            });
+            return this._container;
+        }
 
-            // Adicionar a "Cordinha Vermelha" ligando os pontos na ordem de leitura
-            // Removido o traçado para parecer um fio liso de lã (conforme imagem de referência)
-            // A classe 'red-string-svg' é adicionada para que o CSS crie a sombra 3D por fora do stroke
-            const redString = L.polyline(coordinatesArray, {
-                color: '#900000', /* Vermelho mais escuro e fechado como lã */
-                weight: 5, /* Fio um pouco mais grosso */
-                opacity: 0.9,
-                className: 'red-string-svg', /* Classe customizada que trataremos no CSS */
-                lineJoin: 'round',
-                lineCap: 'round'
-            }).addTo(map);
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
 
-            // Ajusta o zoom do mapa para mostrar todos os pontos
-            if (coordinatesArray.length > 0) {
-                map.fitBounds(redString.getBounds(), { padding: [50, 50] });
-            }
-        })
-        .catch(error => console.error('Erro ao carregar os dados dos livros:', error));
+    map.addControl(new CustomNavigationControl(), 'top-left');
+
+    // Ensure map fills the flex container completely
+    window.addEventListener('resize', () => map.resize());
+    setTimeout(() => map.resize(), 100);
+
+    map.on('load', () => {
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                data.sort((a, b) => a.readOrder - b.readOrder);
+
+                // MapLibre uses [lng, lat] unlike Leaflet which uses [lat, lng]
+                // Convert coordinates from [lat, lng] to [lng, lat]
+                const lngLatData = data.map(book => ({
+                    ...book,
+                    coordinates: [book.coordinates[1], book.coordinates[0]]
+                }));
+
+                const coordinatesArray = lngLatData.map(book => book.coordinates);
+
+                // Add data source for the pins (points)
+                map.addSource('books-data', {
+                    'type': 'geojson',
+                    'data': {
+                        'type': 'FeatureCollection',
+                        'features': lngLatData.map(book => ({
+                            'type': 'Feature',
+                            'geometry': {
+                                'type': 'Point',
+                                'coordinates': book.coordinates
+                            },
+                            'properties': {
+                                'title': book.title,
+                                'location': book.location
+                            }
+                        }))
+                    }
+                });
+
+                // Instead of 3D models (which require heavy glTF loading), we use custom HTML markers for pins
+                // This allows us to use CSS 3D styling (shadows, gradients) which looks identical to the reference image.
+                lngLatData.forEach(book => {
+                    const el = document.createElement('div');
+                    el.className = 'detective-pin';
+
+                    const popup = new maplibregl.Popup({ offset: 25, className: 'custom-popup' })
+                        .setHTML(`<b>${book.title}</b><br><small>${book.location}</small>`);
+
+                    new maplibregl.Marker({ element: el })
+                        .setLngLat(book.coordinates)
+                        .setPopup(popup)
+                        .addTo(map);
+                });
+
+                // Add data source for the red string (line)
+                map.addSource('red-string-source', {
+                    'type': 'geojson',
+                    'data': {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'LineString',
+                            'coordinates': coordinatesArray
+                        }
+                    }
+                });
+
+                // Add a layer to render the line with a 3D-like appearance (shadow layer)
+                map.addLayer({
+                    'id': 'red-string-shadow',
+                    'type': 'line',
+                    'source': 'red-string-source',
+                    'layout': {
+                        'line-join': 'round',
+                        'line-cap': 'round'
+                    },
+                    'paint': {
+                        'line-color': 'rgba(0, 0, 0, 0.5)',
+                        'line-width': 8,
+                        'line-translate': [3, 3] // Offset the line to simulate drop shadow
+                    }
+                });
+
+                // Main red string layer
+                map.addLayer({
+                    'id': 'red-string',
+                    'type': 'line',
+                    'source': 'red-string-source',
+                    'layout': {
+                        'line-join': 'round',
+                        'line-cap': 'round'
+                    },
+                    'paint': {
+                        'line-color': '#a81010', // Deep red wool color
+                        'line-width': 5
+                    }
+                });
+
+            })
+            .catch(error => console.error('Erro ao carregar os dados dos livros:', error));
+    });
 });
